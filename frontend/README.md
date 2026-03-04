@@ -1,40 +1,16 @@
-# Frontend
-# Luvira Ops AI Demo Flow
+# React + Vite
 
-This document defines the expected behavior of the demo.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-The demo must show the deterministic incident response pipeline built on DigitalOcean Gradient AI.
+Currently, two official plugins are available:
 
-## Demo Sequence
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-1. User clicks **Simulate Incident Spike**
+## React Compiler
 
-2. Backend receives simulated log input via `/ingest`
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-3. Deterministic policy engine evaluates risk score
+## Expanding the ESLint configuration
 
-4. If risk >= threshold
-   - Agent is triggered
-
-5. Agent retrieves SOP from Gradient Knowledge Base
-
-6. Agent generates structured remediation plan using Gradient Serverless Inference
-
-7. Response returns structured JSON including:
-   - risk score
-   - triggered status
-   - remediation steps
-   - trace ID
-   - latency metrics
-
-8. Frontend displays the result in the Mission Control dashboard.
-
-## Visual Pipeline
-
-The UI should clearly display:
-
-Ingest → Analyze → Decide → Retrieve → Plan
-
-## Goal
-
-Demonstrate deterministic, traceable infrastructure intelligence using DigitalOcean Gradient AI.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
