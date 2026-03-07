@@ -51,10 +51,11 @@ jobs:
             mkdir -p /opt/luvira-ops
 
             # Run new container with .env file mounted from VPS
+            # Bind to localhost only for security (nginx will proxy)
             docker run -d \
               --name luvira-ops-backend \
               --restart unless-stopped \
-              -p 8080:8080 \
+              -p 127.0.0.1:8080:8080 \
               --env-file /opt/luvira-ops/.env \
               luvira-ops-backend:latest
 

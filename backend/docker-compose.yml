@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: luvira-ops-backend
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"  # Bind to localhost only (for nginx proxy)
     environment:
       - GRADIENT_MODEL_ACCESS_KEY=${GRADIENT_MODEL_ACCESS_KEY}
       - GRADIENT_MODEL_SLUG=${GRADIENT_MODEL_SLUG}
