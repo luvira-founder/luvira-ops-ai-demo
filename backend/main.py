@@ -1,21 +1,168 @@
 import time, uuid, os, json, requests
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from dotenv import load_dotenv
 from gradient import Gradient
 from gradient_adk import entrypoint, add_llm_span, add_agent_span
 
 # 1. Initialize & Environment
 load_dotenv(override=True)
-app = FastAPI()
+
+app = FastAPI(
+    title="Luvira Ops AI",
+    description="""
+    ## Deterministic Infrastructure Intelligence on DigitalOcean Gradient AI
+
+    A production-grade incident response system that transforms infrastructure signals
+    into deterministic, traceable, and structured remediation plans.
+
+    ### Key Features:
+    - **Deterministic Policy Gate**: AI only invoked when risk threshold (0.85) exceeded
+    - **Knowledge Base Integration**: Retrieves SOPs from Gradient Managed Knowledge Base
+    - **AI-Powered Planning**: Generates structured remediation via Gradient Serverless Inference
+    - **Full Observability**: ADK tracing with step-level latency breakdown
+    - **Graceful Degradation**: Fallback modes when services unavailable
+
+    ### Platform:
+    Built natively on **DigitalOcean Gradient AI Platform**
+    - Gradient Agent Development Kit (ADK)
+    - Gradient Serverless Inference
+    - Gradient Managed Knowledge Base
+
+    ### Response Contract:
+    All endpoints return structured JSON (not conversational text) with guaranteed fields.
+    """,
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
 print("--- [LUVIRA OPS BACKEND] Initializing Demo Environment ---")
 
-# --- THE DATA CONTRACT ---
+# --- REQUEST/RESPONSE MODELS ---
+
 class LogIngest(BaseModel):
+    """Request model for log ingestion"""
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "service_name": "Auth API",
+                "error_rate": 0.92,
+                "message": "Auth API error rate exceeding 85%"
+            }
+        }
+    )
+
     service_name: str
     error_rate: float
     message: str
+
+
+class RiskAssessment(BaseModel):
+    """Risk evaluation result"""
+    score: float
+    threshold: float
+    triggered: bool
+
+
+class KnowledgeMatch(BaseModel):
+    """Knowledge Base retrieval metadata"""
+    document: str
+    similarity: float
+    source: str
+
+
+class RemediationPlan(BaseModel):
+    """AI-generated remediation plan"""
+    steps: list[str]
+
+
+class TraceSteps(BaseModel):
+    """Step-level latency breakdown"""
+    ingest_event: int
+    policy_evaluation: int
+    kb_retrieval: int
+    ai_inference: int
+
+
+class Observability(BaseModel):
+    """Execution observability data"""
+    trace_id: str
+    latency_ms: int
+    trace_steps: TraceSteps
+
+
+class FallbackInfo(BaseModel):
+    """Fallback state information"""
+    used: bool
+    reason: str | None
+
+
+class IncidentResponse(BaseModel):
+    """
+    Structured incident response from Luvira Ops AI
+
+    This response follows the deterministic workflow:
+    1. Ingest event
+    2. Policy evaluation (deterministic gate)
+    3. Knowledge Base retrieval (if threshold exceeded)
+    4. AI remediation plan generation
+
+    All fields are guaranteed to be present. The system degrades gracefully
+    with mode and fallback indicators when services are unavailable.
+    """
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "incident_id": "auth-api-spike",
+                "risk": {
+                    "score": 0.92,
+                    "threshold": 0.85,
+                    "triggered": True
+                },
+                "analysis": "Auth API error spike detected",
+                "knowledge_match": {
+                    "document": "Auth API Recovery SOP",
+                    "similarity": 0.91,
+                    "source": "Gradient Managed Knowledge Base"
+                },
+                "plan": {
+                    "steps": [
+                        "Restart container",
+                        "Clear Redis cache",
+                        "Monitor API health"
+                    ]
+                },
+                "observability": {
+                    "trace_id": "UVIRA-C67DC4",
+                    "latency_ms": 1400,
+                    "trace_steps": {
+                        "ingest_event": 120,
+                        "policy_evaluation": 45,
+                        "kb_retrieval": 320,
+                        "ai_inference": 870
+                    }
+                },
+                "mode": "normal",
+                "fallback": {
+                    "used": False,
+                    "reason": None
+                },
+                "errors": []
+            }
+        }
+    )
+
+    incident_id: str
+    risk: RiskAssessment
+    analysis: str
+    knowledge_match: KnowledgeMatch
+    plan: RemediationPlan
+    observability: Observability
+    mode: str  # "normal" | "fallback_sop_only" | "degraded"
+    fallback: FallbackInfo
+    errors: list[str]
+
 
 # --- 1. THE DETERMINISTIC GATE ---
 def policy_gate(error_rate: float):
@@ -350,11 +497,75 @@ def process_incident_workflow(service_name: str, error_rate: float, message: str
 
 
 # --- 4. THE FASTAPI ENDPOINT ---
-@app.post("/ingest")
+@app.post("/ingest", response_model=IncidentResponse, responses={
+    200: {
+        "description": "Successful incident processing",
+        "content": {
+            "application/json": {
+                "example": {
+                    "incident_id": "auth-api-spike",
+                    "risk": {
+                        "score": 0.92,
+                        "threshold": 0.85,
+                        "triggered": True
+                    },
+                    "analysis": "Auth API error spike detected",
+                    "knowledge_match": {
+                        "document": "Auth API Recovery SOP",
+                        "similarity": 0.91,
+                        "source": "Gradient Managed Knowledge Base"
+                    },
+                    "plan": {
+                        "steps": [
+                            "Restart container",
+                            "Clear Redis cache",
+                            "Monitor API health"
+                        ]
+                    },
+                    "observability": {
+                        "trace_id": "UVIRA-C67DC4",
+                        "latency_ms": 1400,
+                        "trace_steps": {
+                            "ingest_event": 120,
+                            "policy_evaluation": 45,
+                            "kb_retrieval": 320,
+                            "ai_inference": 870
+                        }
+                    },
+                    "mode": "normal",
+                    "fallback": {
+                        "used": False,
+                        "reason": None
+                    },
+                    "errors": []
+                }
+            }
+        }
+    }
+})
 async def ingest(data: LogIngest):
     """
-    FastAPI endpoint that wraps the ADK-traced workflow
-    Returns structured JSON matching the contract from overview document (lines 454-508)
+    ## Incident Ingestion & Analysis Endpoint
+
+    Processes infrastructure logs through a deterministic AI workflow:
+
+    **Workflow Steps:**
+    1. **Ingest Event** - Receive service logs
+    2. **Policy Evaluation** - Calculate risk score using deterministic threshold (0.85)
+    3. **Decision Gate** - AI only invoked if threshold exceeded (cost control)
+    4. **Knowledge Retrieval** - Fetch relevant SOP from Gradient Managed Knowledge Base
+    5. **AI Plan Generation** - Generate structured remediation plan via Gradient Serverless Inference
+
+    **Response Contract:**
+    - All fields guaranteed to be present
+    - System degrades gracefully (mode: normal/fallback_sop_only/degraded)
+    - Trace IDs visible in DigitalOcean Gradient AI console
+    - Step-level latency breakdown for observability
+
+    **Error Handling:**
+    - KB retrieval failures → fallback mode with degraded guidance
+    - AI inference failures → returns SOP directly (fallback_sop_only)
+    - Risk calculation failures → structured error response (degraded)
     """
     print(f"--- [INGEST] {data.service_name} | Error Rate: {data.error_rate} ---")
 
