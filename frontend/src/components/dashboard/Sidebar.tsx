@@ -30,7 +30,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 px-3 py-2">
-        <p className="px-3 py-2 text-xs font-semibold text-muted-foreground tracking-wider">
+        <p className="px-3 py-4 text-sm font-semibold text-white tracking-wider">
           General
         </p>
         <ul className="space-y-4">

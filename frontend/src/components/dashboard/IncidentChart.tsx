@@ -5,7 +5,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
@@ -301,7 +300,7 @@ export function IncidentChart({ isSimulating }: IncidentChartProps) {
               className="inline-block w-4 h-1 rounded-full"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-xs text-muted-foreground">{item.label}</span>
+            <span className="text-sm text-gray-200">{item.label}</span>
           </div>
         ))}
       </div>

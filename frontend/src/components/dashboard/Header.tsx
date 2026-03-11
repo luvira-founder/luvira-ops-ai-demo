@@ -18,14 +18,17 @@ export function Header({ onSimulate }: HeaderProps) {
         <div className="flex items-center gap-4">
           <Button
             onClick={onSimulate}
-            className="bg-brand hover:bg-brand-dark text-primary-foreground font-medium px-6 rounded-full"
+            className="bg-brand hover:bg-brand-dark text-white font-medium px-6 rounded-md"
           >
             Simulate Incident Spike
           </Button>
 
-          <button className="relative text-muted-foreground hover:text-foreground transition-colors">
-            <Bell className="size-5" />
-          </button>
+          <Button variant="outline" size="icon">
+            <Bell />
+          </Button>
+          {/* <button className="relative text-muted-foreground hover:text-foreground transition-colors">
+            <Bell />
+          </button> */}
 
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="size-9 rounded-full bg-purple-500 flex items-center justify-center text-white text-sm font-medium">
