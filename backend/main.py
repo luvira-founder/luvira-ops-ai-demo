@@ -1,5 +1,6 @@
 import time, uuid, os, json, requests
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict
 from dotenv import load_dotenv
 from gradient import Gradient
@@ -35,6 +36,23 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
+)
+
+# Configure CORS
+# Allow requests from localhost (development) and production frontend
+origins = [
+    "http://localhost:5173",  # Vite dev server
+    "http://localhost:3000",  # Alternative dev port
+    "https://ops-prod.myluvira.ai",  # Production frontend (if deployed)
+    "https://myluvira.ai",  # Production domain variants
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers
 )
 
 print("--- [LUVIRA OPS BACKEND] Initializing Demo Environment ---")
