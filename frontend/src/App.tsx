@@ -1,45 +1,21 @@
-import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import { Sidebar } from "./components/dashboard/side-bar";
 import { Header } from "./components/dashboard/header";
-import { IncidentChart } from "./components/dashboard/incident-chart";
-import { RiskMeter } from "./components/dashboard/risk-meter";
-import { TraceWorkflow } from "./components/dashboard/track-workflow";
-import ChartHeader from "./components/dashboard/chart-header";
+import Overview from "./pages/overview";
+import UserManagement from "./pages/user-management";
 
 function App() {
-  const [isSimulating, setIsSimulating] = useState(true);
-
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header onSimulate={() => setIsSimulating((prev) => !prev)} />
+        <Header onSimulate={() => {}} />
 
-        <main className="flex-1 overflow-y-auto p-6 space-y-4">
-          <ChartHeader />
-          <IncidentChart isSimulating={isSimulating} />
-
-          <div className="flex w-full gap-5">
-            <RiskMeter
-              percentage={88}
-              latency="1355ms"
-              traceId="UVIRA-C67DC4"
-            />
-            <TraceWorkflow
-              summary={[
-                "Auth API error spike detected",
-                "Error rate exceeded threshold",
-              ]}
-              steps={[
-                { label: "Ingest Event", value: "120ms" },
-                { label: "Policy Evaluation", value: "45ms" },
-                { label: "KB Retrieval", value: "320ms" },
-                { label: "AI Inference", value: "870ms" },
-              ]}
-            />
-          </div>
-        </main>
+        <Routes>
+          <Route path="/" element={<Overview />} />
+          <Route path="/user-management" element={<UserManagement />} />
+        </Routes>
       </div>
     </div>
   );

@@ -7,15 +7,16 @@ import {
   HelpCircle,
   LogOut,
 } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 const navItems = [
-  { icon: LayoutGrid, label: "Overview", active: true },
-  { icon: Users, label: "User Management" },
-  { icon: Megaphone, label: "Campaign & Automation" },
-  { icon: CreditCard, label: "Payment & Subscription" },
-  { icon: Shield, label: "Account & Security" },
-  { icon: HelpCircle, label: "Support" },
-  { icon: LogOut, label: "Logout" },
+  { icon: LayoutGrid, label: "Overview", to: "/" },
+  { icon: Users, label: "User Management", to: "/user-management" },
+  { icon: Megaphone, label: "Campaign & Automation", to: "/campaigns" },
+  { icon: CreditCard, label: "Payment & Subscription", to: "/payments" },
+  { icon: Shield, label: "Account & Security", to: "/security" },
+  { icon: HelpCircle, label: "Support", to: "/support" },
+  { icon: LogOut, label: "Logout", to: "/logout" },
 ];
 
 export function Sidebar() {
@@ -36,17 +37,20 @@ export function Sidebar() {
         <ul className="space-y-4">
           {navItems.map((item) => (
             <li key={item.label}>
-              <a
-                href="#"
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                  item.active
-                    ? "bg-gray-600/30 text-white font-medium"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent"
-                }`}
+              <NavLink
+                to={item.to}
+                end={item.to === "/"}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                    isActive
+                      ? "bg-gray-600/30 text-white font-medium"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent"
+                  }`
+                }
               >
                 <item.icon className="size-4" />
                 {item.label}
-              </a>
+              </NavLink>
             </li>
           ))}
         </ul>
