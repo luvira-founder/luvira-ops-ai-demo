@@ -43,8 +43,7 @@ app = FastAPI(
 origins = [
     "http://localhost:5173",  # Vite dev server
     "http://localhost:3000",  # Alternative dev port
-    "https://ops-prod.myluvira.ai",  # Production frontend (if deployed)
-    "https://myluvira.ai",  # Production domain variants
+    "https://demo.myluvira.ai",  # Demo frontend
 ]
 
 app.add_middleware(
