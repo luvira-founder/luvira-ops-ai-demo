@@ -42,4 +42,4 @@ jobs:
           # Syncing the built static files to the server's web directory
           rsync -avzr --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            dist/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/myluvira/
+            dist/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/demo.myluvira.ai/
