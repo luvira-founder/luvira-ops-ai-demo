@@ -141,6 +141,8 @@ celerybeat.pid
 
 # Node
 node_modules/
+dist/
+.vite/
 
 dist/
 
