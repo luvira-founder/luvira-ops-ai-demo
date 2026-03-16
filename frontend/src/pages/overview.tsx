@@ -54,11 +54,11 @@ export default function Overview() {
     : null;
 
   return (
-    <main className="flex-1 overflow-y-auto p-6 space-y-4">
+    <main className="flex-1 overflow-y-auto px-2 space-y-4 sm:p-6">
       <ChartHeader />
       <IncidentChart isSimulating={isPending} />
 
-      <div className="flex w-full gap-5">
+      <div className="flex flex-col w-full gap-5 lg:flex-row lg:space-y-0">
         <RiskMeter percentage={riskScore} latency={latency} traceId={traceId} />
         <TraceWorkflow
           summary={summary}
