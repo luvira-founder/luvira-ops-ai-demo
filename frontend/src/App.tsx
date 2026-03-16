@@ -15,7 +15,7 @@ function App() {
         <div className="flex h-screen overflow-hidden">
           <Sidebar />
 
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 flex flex-col overflow-hidden pb-5">
             <Header />
 
             <Routes>
