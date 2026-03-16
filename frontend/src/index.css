@@ -95,3 +95,26 @@
       sans-serif;
   }
 }
+
+.chart-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.chart-scroll::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+
+.chart-scroll::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.chart-scroll::-webkit-scrollbar-thumb:hover {
+  background: #6b6b6b;
+}
+
+.chart-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #2a2a2a;
+}

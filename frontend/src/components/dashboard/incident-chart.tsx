@@ -212,95 +212,109 @@ export function IncidentChart({ isSimulating }: IncidentChartProps) {
   const data = isSimulating ? baseData : baseData.slice(0, 6);
 
   return (
-    <div className="bg-[#1c1d1f] rounded-xl p-5 border-2 border-gray-100/10">
-      <h2 className="text-base font-semibold text-card-foreground mb-4">
+    <div className="bg-[#1c1d1f] rounded-xl p-2 border-2 border-gray-100/10 sm:p-5">
+      <h2 className="text-sm font-semibold text-card-foreground mb-4 sm:text-base">
         Incident Simulation Control
       </h2>
 
-      <ResponsiveContainer width="100%" height={320}>
-        <LineChart
-          data={data}
-          margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#2e2e48" />
-          <XAxis
-            dataKey="time"
-            stroke="#6b6b8a"
-            tick={{ fill: "#8888aa", fontSize: 12 }}
-            axisLine={{ stroke: "#2e2e48" }}
-          />
-          <YAxis
-            stroke="#6b6b8a"
-            tick={{ fill: "#8888aa", fontSize: 12 }}
-            axisLine={{ stroke: "#2e2e48" }}
-            tickFormatter={(v) => `${v}%`}
-            domain={[0, 100]}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "#1e1e34",
-              border: "1px solid #2e2e48",
-              borderRadius: "8px",
-              color: "#e0e0e0",
-            }}
-          />
-          {isSimulating && (
-            <>
-              <ReferenceLine x="16:00" stroke="#f97316" strokeDasharray="3 3" />
-              <ReferenceLine x="22:00" stroke="#3bcaca" strokeDasharray="3 3" />
-            </>
-          )}
-          <Line
-            type="monotone"
-            dataKey="logSignal"
-            stroke="#ef4444"
-            strokeWidth={2}
-            dot={false}
-            name="Log Signal"
-          />
-          <Line
-            type="monotone"
-            dataKey="policyEngine"
-            stroke="#a855f7"
-            strokeWidth={2}
-            dot={false}
-            name="Policy Engine"
-          />
-          <Line
-            type="monotone"
-            dataKey="riskThreshold"
-            stroke="#f97316"
-            strokeWidth={2}
-            dot={false}
-            name="Risk Threshold"
-          />
-          <Line
-            type="monotone"
-            dataKey="gradientKB"
-            stroke="#22c55e"
-            strokeWidth={2}
-            dot={false}
-            name="Gradient KB"
-          />
-          <Line
-            type="monotone"
-            dataKey="aiRemediation"
-            stroke="#3bcaca"
-            strokeWidth={2}
-            dot={false}
-            name="AI Remediation"
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      <div className="chart-scroll overflow-x-auto -mx-5 px-5">
+        <div className="min-w-150">
+          <ResponsiveContainer width="100%" height={320}>
+            <LineChart
+              data={data}
+              margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#2e2e48" />
+              <XAxis
+                dataKey="time"
+                stroke="#6b6b8a"
+                tick={{ fill: "#8888aa", fontSize: 12 }}
+                axisLine={{ stroke: "#2e2e48" }}
+              />
+              <YAxis
+                stroke="#6b6b8a"
+                tick={{ fill: "#8888aa", fontSize: 12 }}
+                axisLine={{ stroke: "#2e2e48" }}
+                tickFormatter={(v) => `${v}%`}
+                domain={[0, 100]}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1e1e34",
+                  border: "1px solid #2e2e48",
+                  borderRadius: "8px",
+                  color: "#e0e0e0",
+                }}
+              />
+              {isSimulating && (
+                <>
+                  <ReferenceLine
+                    x="16:00"
+                    stroke="#f97316"
+                    strokeDasharray="3 3"
+                  />
+                  <ReferenceLine
+                    x="22:00"
+                    stroke="#3bcaca"
+                    strokeDasharray="3 3"
+                  />
+                </>
+              )}
+              <Line
+                type="monotone"
+                dataKey="logSignal"
+                stroke="#ef4444"
+                strokeWidth={2}
+                dot={false}
+                name="Log Signal"
+              />
+              <Line
+                type="monotone"
+                dataKey="policyEngine"
+                stroke="#a855f7"
+                strokeWidth={2}
+                dot={false}
+                name="Policy Engine"
+              />
+              <Line
+                type="monotone"
+                dataKey="riskThreshold"
+                stroke="#f97316"
+                strokeWidth={2}
+                dot={false}
+                name="Risk Threshold"
+              />
+              <Line
+                type="monotone"
+                dataKey="gradientKB"
+                stroke="#22c55e"
+                strokeWidth={2}
+                dot={false}
+                name="Gradient KB"
+              />
+              <Line
+                type="monotone"
+                dataKey="aiRemediation"
+                stroke="#3bcaca"
+                strokeWidth={2}
+                dot={false}
+                name="AI Remediation"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
 
-      <div className="flex items-center justify-center gap-6 mt-3">
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-3">
         {legendItems.map((item) => (
           <div key={item.label} className="flex items-center gap-2">
             <span
               className="inline-block w-4 h-1 rounded-full"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-sm text-gray-200">{item.label}</span>
+            <span className="text-xs sm:text-sm text-gray-200">
+              {item.label}
+            </span>
           </div>
         ))}
       </div>

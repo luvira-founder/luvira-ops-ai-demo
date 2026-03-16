@@ -19,9 +19,9 @@ const navItems = [
   { icon: LogOut, label: "Logout", to: "/logout" },
 ];
 
-export function Sidebar() {
+export function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
   return (
-    <aside className="w-64 bg-sidebar flex flex-col border-r-2 border-gray-100/10 shrink-0">
+    <>
       <div className="p-5 flex items-center gap-2">
         <img
           src="/assets/luvira-logo.png"
@@ -40,6 +40,7 @@ export function Sidebar() {
               <NavLink
                 to={item.to}
                 end={item.to === "/"}
+                onClick={onNavClick}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                     isActive
@@ -55,6 +56,14 @@ export function Sidebar() {
           ))}
         </ul>
       </nav>
+    </>
+  );
+}
+
+export function Sidebar() {
+  return (
+    <aside className="hidden lg:flex w-64 bg-sidebar flex-col border-r-2 border-gray-100/10 shrink-0">
+      <SidebarContent />
     </aside>
   );
 }
